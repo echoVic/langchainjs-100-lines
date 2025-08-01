@@ -54,7 +54,7 @@
 
 ## 4. 5 行代码跑通 Hello LLM
 
-> 不想装环境？直接打开浏览器 👉  [Live Demo](browser-demo.html)
+> 不想装环境？直接打开浏览器 👉  [Live Demo](https://echovic.github.io/langchainjs-100-lines/examples/01-hello/browser-demo.html)
 > 
 > 或者使用 CodeSandbox 👉  [在线体验](https://codesandbox.io/p/github/echoVic/langchainjs-100-lines/main?import=true)
 > 
