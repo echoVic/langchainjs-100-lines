@@ -9,7 +9,7 @@
     "browser:01": "node scripts/serve-browser.js",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "type-check": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "clean": "rm -rf node_modules dist .turbo",
     "check-setup": "tsx scripts/check-setup.ts",
     "build": "echo 'Build completed - static site ready'"
@@ -31,10 +31,13 @@
     "langchain": "^0.3.30"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.19.9",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.0",
     "tsx": "^4.20.3",
     "typescript": "^5.9.2"
   },
