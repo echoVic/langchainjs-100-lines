@@ -1,0 +1,281 @@
+name: Deploy Examples
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Build static site
+        run: |
+          mkdir -p _site
+          
+          # 创建主页面
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>LangChain.js 100行代码教程 - 在线Demo</title>
+              <style>
+                  * {
+                      margin: 0;
+                      padding: 0;
+                      box-sizing: border-box;
+                  }
+                  
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      min-height: 100vh;
+                      color: white;
+                      line-height: 1.6;
+                  }
+                  
+                  .container {
+                      max-width: 1200px;
+                      margin: 0 auto;
+                      padding: 40px 20px;
+                  }
+                  
+                  .header {
+                      text-align: center;
+                      margin-bottom: 50px;
+                  }
+                  
+                  .header h1 {
+                      font-size: 2.5rem;
+                      margin-bottom: 10px;
+                      font-weight: 700;
+                  }
+                  
+                  .header p {
+                      font-size: 1.2rem;
+                      opacity: 0.9;
+                  }
+                  
+                  .examples-grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                      gap: 30px;
+                      margin-bottom: 50px;
+                  }
+                  
+                  .example-card {
+                      background: rgba(255, 255, 255, 0.1);
+                      backdrop-filter: blur(10px);
+                      border-radius: 20px;
+                      padding: 40px;
+                      text-align: center;
+                      transition: all 0.3s ease;
+                      border: 1px solid rgba(255, 255, 255, 0.2);
+                  }
+                  
+                  .example-card:hover {
+                      transform: translateY(-10px);
+                      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+                      background: rgba(255, 255, 255, 0.15);
+                  }
+                  
+                  .example-icon {
+                      font-size: 3rem;
+                      margin-bottom: 20px;
+                  }
+                  
+                  .example-title {
+                      font-size: 1.5rem;
+                      font-weight: 600;
+                      margin-bottom: 15px;
+                  }
+                  
+                  .example-description {
+                      opacity: 0.8;
+                      margin-bottom: 25px;
+                  }
+                  
+                  .btn {
+                      display: inline-block;
+                      background: #667eea;
+                      color: white;
+                      padding: 12px 30px;
+                      text-decoration: none;
+                      border-radius: 50px;
+                      font-weight: 600;
+                      transition: all 0.3s ease;
+                      border: none;
+                      cursor: pointer;
+                  }
+                  
+                  .btn:hover {
+                      background: #5a6fd8;
+                      transform: translateY(-2px);
+                      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                  }
+                  
+                  .btn-secondary {
+                      background: transparent;
+                      border: 2px solid white;
+                      margin-left: 10px;
+                  }
+                  
+                  .btn-secondary:hover {
+                      background: white;
+                      color: #667eea;
+                  }
+                  
+                  .info-section {
+                      background: rgba(255, 255, 255, 0.1);
+                      backdrop-filter: blur(10px);
+                      border-radius: 20px;
+                      padding: 40px;
+                      margin-top: 50px;
+                      text-align: center;
+                  }
+                  
+                  .info-section h2 {
+                      margin-bottom: 20px;
+                  }
+                  
+                  .steps {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                      gap: 20px;
+                      margin-top: 30px;
+                  }
+                  
+                  .step {
+                      background: rgba(255, 255, 255, 0.1);
+                      padding: 20px;
+                      border-radius: 15px;
+                  }
+                  
+                  .step-number {
+                      background: #667eea;
+                      color: white;
+                      width: 30px;
+                      height: 30px;
+                      border-radius: 50%;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      margin: 0 auto 10px;
+                      font-weight: bold;
+                  }
+                  
+                  @media (max-width: 768px) {
+                      .header h1 {
+                          font-size: 2rem;
+                      }
+                      
+                      .examples-grid {
+                          grid-template-columns: 1fr;
+                      }
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h1>🚀 LangChain.js 100行代码教程</h1>
+                      <p>无需安装环境，直接在浏览器中体验 LangChain.js 的强大功能</p>
+                  </div>
+                  
+                  <div class="examples-grid">
+                      <div class="example-card">
+                          <div class="example-icon">📱</div>
+                          <div class="example-title">Hello World Demo</div>
+                          <div class="example-description">
+                              5行代码体验第一个LLM应用，直接在浏览器中运行，无需后端服务器
+                          </div>
+                          <a href="examples/01-hello/browser-demo.html" class="btn">立即体验</a>
+                      </div>
+                      
+                      <div class="example-card">
+                          <div class="example-icon">📚</div>
+                          <div class="example-title">完整教程</div>
+                          <div class="example-description">
+                              10讲系列教程，从基础到进阶，100行代码搞定LLM应用开发
+                          </div>
+                          <a href="https://github.com/echoVic/langchainjs-100-lines" class="btn" target="_blank">查看源码</a>
+                          <a href="https://github.com/echoVic/langchainjs-100-lines" class="btn btn-secondary" target="_blank">Star项目</a>
+                      </div>
+                      
+                      <div class="example-card">
+                          <div class="example-icon">🎯</div>
+                          <div class="example-title">在线CodeSandbox</div>
+                          <div class="example-description">
+                              在CodeSandbox中在线编辑和运行代码，支持实时预览和协作
+                          </div>
+                          <a href="https://codesandbox.io/p/github/echoVic/langchainjs-100-lines/main" class="btn" target="_blank">打开CodeSandbox</a>
+                      </div>
+                  </div>
+                  
+                  <div class="info-section">
+                      <h2>💡 快速开始指南</h2>
+                      <p>3分钟上手，无需安装任何软件</p>
+                      
+                      <div class="steps">
+                          <div class="step">
+                              <div class="step-number">1</div>
+                              <strong>获取API Key</strong><br>
+                              访问 <a href="https://openrouter.ai/keys" target="_blank" style="color: white;">OpenRouter</a> 获取免费API Key
+                          </div>
+                          
+                          <div class="step">
+                              <div class="step-number">2</div>
+                              <strong>打开Demo</strong><br>
+                              点击上面的"立即体验"按钮
+                          </div>
+                          
+                          <div class="step">
+                              <div class="step-number">3</div>
+                              <strong>开始体验</strong><br>
+                              输入API Key，开始与AI对话
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+
+          # 复制所有示例文件
+          cp -r examples _site/examples
+          
+          # 创建CNAME文件（如果需要自定义域名）
+          # echo "your-domain.com" > _site/CNAME
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: deploy-examples
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

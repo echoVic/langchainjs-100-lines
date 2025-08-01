@@ -2,6 +2,9 @@
 
 > 🚀 通过 10 个简洁实用的示例，快速掌握 LangChain.js 核心概念
 
+[![🚀 Live Demo](https://img.shields.io/badge/🚀-Live%20Demo-green?style=flat-square)](https://echovic.github.io/langchainjs-100-lines/)
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://codesandbox.io/p/github/echoVic/langchainjs-100-lines/main?import=true)
+
 ## 📋 项目介绍
 
 这是一个专为学习 LangChain.js 设计的教程项目，每个示例都控制在 **100 行代码以内**，聚焦核心概念，避免复杂实现，让你快速上手 AI 应用开发。
@@ -30,8 +33,11 @@
 
 | 方式 | 链接 | 说明 |
 |---|---|---|
+| **GitHub Pages** | [🚀 在线Demo](https://echovic.github.io/langchainjs-100-lines/) | 一键部署，直接访问 |
 | **CodeSandbox** | [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://codesandbox.io/p/github/echoVic/langchainjs-100-lines/main?import=true) | 一键在线运行 |
 | **浏览器演示** | [Live Demo](examples/01-hello/browser-demo.html) | 本地浏览器直接运行 |
+
+> 💡 **推荐使用 GitHub Pages 版本**，无需任何配置，打开即用！
 
 ### 💻 本地开发
 
