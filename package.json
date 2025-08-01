@@ -1,0 +1,43 @@
+{
+  "name": "langchainjs-100-lines",
+  "version": "1.0.0",
+  "description": "LangChain.js 学习项目",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx examples/01-hello/index.ts",
+    "dev:01": "tsx examples/01-hello/index.ts",
+    "browser:01": "node scripts/serve-browser.js",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "clean": "rm -rf node_modules dist .turbo",
+    "check-setup": "tsx scripts/check-setup.ts"
+  },
+  "keywords": [
+    "langchain",
+    "nodejs",
+    "ai",
+    "llm",
+    "tutorial",
+    "examples"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@langchain/core": "^0.3.66",
+    "@langchain/openai": "^0.3.17",
+    "dotenv": "^16.6.1",
+    "langchain": "^0.3.30"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.57.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

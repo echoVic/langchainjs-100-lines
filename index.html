@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangChain.js 100 Lines - 主页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .demo-card h3 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .demo-card p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .demo-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .demo-button:hover {
+            background: #5a6fd8;
+            color: white;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .quick-start {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .quick-start h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 50px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 LangChain.js 100 Lines</h1>
+            <p>用最少的代码，掌握最强的 AI 能力</p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h3>🌐 浏览器演示</h3>
+                <p>无需安装任何环境，直接在浏览器中体验 LangChain.js 的强大功能。只需要一个 API Key 即可开始。</p>
+                <a href="examples/01-hello/browser-demo.html" class="demo-button">
+                    立即体验
+                </a>
+            </div>
+
+            <div class="demo-card">
+                <h3>⚡ 本地运行</h3>
+                <p>使用 Node.js 在本地运行，体验完整的开发环境。包含类型检查、调试等开发工具。</p>
+                <div class="code-block">
+                    pnpm run dev:01
+                </div>
+                <button class="demo-button" onclick="showInstructions('local')">
+                    查看教程
+                </button>
+            </div>
+
+            <div class="demo-card">
+                <h3>📦 CodeSandbox</h3>
+                <p>在线代码沙盒环境，可以实时编辑和运行代码。适合快速原型开发和分享。</p>
+                <a href="https://codesandbox.io/p/github/echoVic/langchainjs-100-lines/main?import=true" target="_blank" class="demo-button">
+                    打开沙盒
+                </a>
+            </div>
+        </div>
+
+        <div class="quick-start" id="instructions" style="display: none;">
+            <h2>🚀 快速开始</h2>
+            <div id="local-instructions">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>克隆项目</strong><br>
+                        <code>git clone https://github.com/yourname/langchainjs-100-lines.git</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>安装依赖</strong><br>
+                        <code>cd langchainjs-100-lines && pnpm install</code>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>配置环境</strong><br>
+                        <code>cp .env.example .env</code><br>
+                        编辑 .env 文件，填入你的 API Key
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <strong>运行示例</strong><br>
+                        <code>pnpm run dev:01</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-start">
+            <h2>📖 学习路线图</h2>
+            <p>本系列共 10 讲，每讲 100 行代码以内，循序渐进掌握 LangChain.js：</p>
+            <div class="step">
+                <div class="step-number">01</div>
+                <div><strong>Hello LLM</strong> - 5 行代码跑通第一个 AI 应用</div>
+            </div>
+            <div class="step">
+                <div class="step-number">02</div>
+                <div><strong>LCEL 管道</strong> - 把多步操作变成一条链</div>
+            </div>
+            <div class="step">
+                <div class="step-number">03</div>
+                <div><strong>记忆系统</strong> - 让 AI 记住对话历史</div>
+            </div>
+            <div class="step">
+                <div class="step-number">04</div>
+                <div><strong>RAG 检索</strong> - 让 AI 从你的文档找答案</div>
+            </div>
+            <div class="step">
+                <div class="step-number">05</div>
+                <div><strong>Agent 代理</strong> - 让 AI 自主使用工具</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎯 用最少的代码，掌握最强的 AI 能力</p>
+        </div>
+    </div>
+
+    <script>
+        function showInstructions(type) {
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = 'block';
+            instructions.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

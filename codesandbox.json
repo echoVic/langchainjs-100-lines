@@ -1,0 +1,32 @@
+{
+  "name": "LangChain.js 100 Lines",
+  "description": "极简的LangChain.js入门教程，只需100行代码即可上手",
+  "keywords": ["langchain", "ai", "llm", "javascript", "tutorial"],
+  "environment": "node",
+  "node": "18",
+  "port": 3000,
+  "template": "node",
+  "tasks": {
+    "start": {
+      "name": "启动演示",
+      "command": "pnpm dev:01"
+    },
+    "browser": {
+      "name": "浏览器演示", 
+      "command": "pnpm run browser:01"
+    },
+    "install": {
+      "name": "安装依赖",
+      "command": "pnpm install"
+    }
+  },
+  "files": {
+    "/examples/01-hello/browser-demo.html": {
+      "isBinary": false
+    },
+    "/.env.example": {
+      "isBinary": false,
+      "content": "# 复制此文件为 .env 并填入你的API密钥\nOPENAI_API_KEY=your-openai-api-key-here\nOPENAI_API_BASE=https://api.openai.com/v1"
+    }
+  }
+}

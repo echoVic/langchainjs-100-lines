@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangChain.js Hello World - 浏览器版</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .loading {
+            text-align: center;
+            color: #667eea;
+        }
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+        .code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 LangChain.js Hello World</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            在浏览器中直接体验 LangChain.js，无需安装任何环境！
+        </p>
+
+        <div class="input-group">
+            <label for="apiKey">OpenRouter API Key:</label>
+            <input type="password" id="apiKey" placeholder="sk-or-v1-..." value="">
+            <small style="color: #666;">
+                获取免费 API Key: <a href="https://openrouter.ai/keys" target="_blank">https://openrouter.ai/keys</a>
+            </small>
+        </div>
+
+        <div class="input-group">
+            <label for="question">问题:</label>
+            <textarea id="question" rows="3" placeholder="用一句话介绍 LangChain.js">用一句话介绍 LangChain.js</textarea>
+        </div>
+
+        <button onclick="askQuestion()" id="askBtn">提问</button>
+
+        <div id="result" style="display: none;">
+            <div class="result">
+                <strong>回答:</strong>
+                <div id="answer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // 浏览器版的 LangChain.js 实现
+        class ChatOpenAI {
+            constructor({ apiKey, baseURL = 'https://openrouter.ai/api/v1', model = 'openai/gpt-3.5-turbo' }) {
+                this.apiKey = apiKey;
+                this.baseURL = baseURL;
+                this.model = model;
+            }
+
+            async invoke(message) {
+                const response = await fetch(`${this.baseURL}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.apiKey}`,
+                        'HTTP-Referer': window.location.href,
+                        'X-Title': 'LangChain.js Browser Demo'
+                    },
+                    body: JSON.stringify({
+                        model: this.model,
+                        messages: [{ role: 'user', content: message }],
+                        temperature: 0.7,
+                        max_tokens: 200
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                return {
+                    content: data.choices[0].message.content
+                };
+            }
+        }
+
+        // 全局变量
+        window.ChatOpenAI = ChatOpenAI;
+    </script>
+
+    <script>
+        async function askQuestion() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const question = document.getElementById('question').value.trim();
+            const askBtn = document.getElementById('askBtn');
+            const resultDiv = document.getElementById('result');
+            const answerDiv = document.getElementById('answer');
+
+            if (!apiKey) {
+                alert('请输入 OpenRouter API Key');
+                return;
+            }
+
+            if (!question) {
+                alert('请输入问题');
+                return;
+            }
+
+            // 显示加载状态
+            askBtn.disabled = true;
+            askBtn.textContent = '思考中...';
+            resultDiv.style.display = 'block';
+            answerDiv.innerHTML = '<div class="loading">🤔 AI 正在思考...</div>';
+
+            try {
+                const llm = new ChatOpenAI({ 
+                    apiKey: apiKey,
+                    model: 'openai/gpt-3.5-turbo'
+                });
+                
+                const response = await llm.invoke(question);
+                answerDiv.innerHTML = response.content;
+                
+            } catch (error) {
+                answerDiv.innerHTML = `<div class="result error">
+                    <strong>错误:</strong> ${error.message}
+                </div>`;
+            } finally {
+                askBtn.disabled = false;
+                askBtn.textContent = '提问';
+            }
+        }
+
+        // 保存 API Key 到本地存储
+        document.getElementById('apiKey').addEventListener('input', function(e) {
+            localStorage.setItem('openrouter-key', e.target.value);
+        });
+
+        // 加载保存的 API Key
+        window.addEventListener('load', function() {
+            const savedKey = localStorage.getItem('openrouter-key');
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+            }
+        });
+    </script>
+</body>
+</html>

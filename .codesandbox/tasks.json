@@ -1,0 +1,26 @@
+{
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "pnpm install"
+    }
+  ],
+  "tasks": {
+    "dev": {
+      "name": "Development",
+      "command": "pnpm dev:01",
+      "runAtStart": false,
+      "preview": {
+        "port": 3000
+      }
+    },
+    "browser": {
+      "name": "Browser Demo",
+      "command": "pnpm run browser:01",
+      "runAtStart": true,
+      "preview": {
+        "port": 3000
+      }
+    },
+  }
+}
