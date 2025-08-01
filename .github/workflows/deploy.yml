@@ -25,6 +25,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build project
+        run: pnpm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -33,10 +50,7 @@ jobs:
           # 创建部署目录
           mkdir -p _site
           
-          # 复制浏览器demo文件
-          cp examples/01-hello/browser-demo.html _site/index.html
-          
-          # 复制其他静态资源
+          # 复制构建后的文件和静态资源
           cp -r examples _site/examples 2>/dev/null || true
           cp README.md _site/ 2>/dev/null || true
           
@@ -111,7 +125,7 @@ jobs:
                       <div class="demo-card">
                           <h3>📱 Hello World Demo</h3>
                           <p>5行代码体验第一个LLM应用</p>
-                          <a href="browser-demo.html" class="btn">立即体验</a>
+                          <a href="examples/01-hello/browser-demo.html" class="btn">立即体验</a>
                       </div>
                       
                       <div class="demo-card">
@@ -142,7 +156,7 @@ jobs:
           EOF
 
           # 复制浏览器demo
-          cp examples/01-hello/browser-demo.html _site/browser-demo.html
+          cp examples/01-hello/browser-demo.html _site/examples/01-hello/browser-demo.html
 
       - name: 上传artifacts
         uses: actions/upload-pages-artifact@v3
