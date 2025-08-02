@@ -1,17 +1,14 @@
-# 5行代码，让JS开发者也能玩转ChatGPT！
-> 从零开始用100行TypeScript构建LLM应用｜系列第01篇  
+# LangChain.js 100 行系列 - 01 · Hello LLM
 
-作为一个前端开发者，每次看到AI相关的教程都在讲Python，是不是感觉被时代抛弃了？
-
-别担心，从今天开始，我要用100行TypeScript代码，带所有前端开发者走进AI世界。
-
-这是《LangChain.js系列》第01篇：鸟瞰与路线图，一张图看懂如何从0到1构建LLM应用。 
+《用 100 行 TypeScript 把 LLM 搬进你的全栈应用》  
+系列 01 · Hello LLM：5行代码，让JS开发者也能玩转ChatGPT！  
+（阅读时长 ≈ 6 min，动手 5 min）
 
 ---
 
 ## 1. 为什么再写一篇 LangChain.js 教程？
 
-市面上已有不少“XX 入门到精通”，但要么  
+市面上已有不少"XX 入门到精通"，但要么  
 • 默认你懂 Python / 机器学习，要么  
 • 一口气把全部概念倒给你，读到第 3 节就劝退。  
 
@@ -28,7 +25,7 @@
 ## 2. 30 秒认识 LangChain.js
 
 一句话：  
-> LangChain.js = 帮你把大模型（OpenAI、Claude、Gemini…）“接”进 JS 世界的胶水框架。  
+> LangChain.js = 帮你把大模型（OpenAI、Claude、Gemini…）"接"进 JS 世界的胶水框架。  
 
 它能帮你做 4 件事：  
 | 能力         | 一句话解释                      | 本篇是否展开 |
@@ -40,7 +37,7 @@
 
 ---
 
-## 3. 与 Python 版的三处“灵魂差异”
+## 3. 与 Python 版的三处"灵魂差异"
 
 | 维度        | Python LangChain           | LangChain.js                            |
 |-------------|----------------------------|-----------------------------------------|
@@ -48,7 +45,7 @@
 | 运行环境    | 主要是 Python 后端          | Node.js、浏览器、Deno、CF Workers…      |
 | 包管理      | `pip install langchain`    | 多包：`@langchain/core`、`@langchain/openai`… |
 
-💡 记住：概念 1:1 对应，代码基本能“翻译”。
+💡 记住：概念 1:1 对应，代码基本能"翻译"。
 
 ---
 

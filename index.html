@@ -156,16 +156,22 @@
             <div class="demo-card">
                 <h3>🌐 浏览器演示</h3>
                 <p>无需安装任何环境，直接在浏览器中体验 LangChain.js 的强大功能。只需要一个 API Key 即可开始。</p>
-                <a href="examples/01-hello/browser-demo.html" class="demo-button">
-                    立即体验
-                </a>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="examples/01-hello/browser-demo.html" class="demo-button">
+                        Demo 01 - Hello
+                    </a>
+                    <a href="examples/02-lcel/browser-demo.html" class="demo-button">
+                        Demo 02 - LCEL
+                    </a>
+                </div>
             </div>
 
             <div class="demo-card">
                 <h3>⚡ 本地运行</h3>
                 <p>使用 Node.js 在本地运行，体验完整的开发环境。包含类型检查、调试等开发工具。</p>
                 <div class="code-block">
-                    pnpm run dev:01
+                    pnpm run dev:01  # Hello LLM 示例<br>
+                    pnpm run dev:02  # LCEL 管道示例
                 </div>
                 <button class="demo-button" onclick="showInstructions('local')">
                     查看教程
@@ -225,7 +231,7 @@
             </div>
             <div class="step">
                 <div class="step-number">02</div>
-                <div><strong>LCEL 管道</strong> - 把多步操作变成一条链</div>
+                <div><strong>LCEL 管道</strong> - 把多步操作变成一条链，支持单次调用、流式输出和批量处理</div>
             </div>
             <div class="step">
                 <div class="step-number">03</div>

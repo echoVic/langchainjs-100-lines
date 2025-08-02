@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangChain.js LCEL 管道 - 浏览器版</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, textarea, button, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            white-space: pre-wrap;
+        }
+        .loading {
+            text-align: center;
+            color: #667eea;
+        }
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            border-left-color: #e74c3c;
+        }
+        .code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .mode-selector button {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 14px;
+            border: 2px solid #e1e5e9;
+            background: #f8f9fa;
+            color: #495057;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .mode-selector button:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+            transform: translateY(-1px);
+        }
+        .mode-selector button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            border: 2px solid #fff;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .mode-selector button.active::before {
+            content: '✓';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .batch-input {
+            display: none;
+        }
+        .batch-input.show {
+            display: block;
+        }
+        .batch-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .batch-item input {
+            flex: 1;
+        }
+        .batch-item button {
+            width: auto;
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 LangChain.js LCEL 管道</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            体验 LCEL 管道式编程：Prompt → LLM → OutputParser
+        </p>
+
+        <div class="input-group">
+            <label for="apiKey">OpenRouter API Key:</label>
+            <input type="password" id="apiKey" placeholder="sk-or-v1-..." value="">
+            <small style="color: #666;">
+                获取免费 API Key: <a href="https://openrouter.ai/keys" target="_blank">https://openrouter.ai/keys</a>
+            </small>
+        </div>
+
+        <div class="input-group">
+            <label for="topic">主题 (topic):</label>
+            <input type="text" id="topic" placeholder="LangChain.js" value="LangChain.js">
+        </div>
+
+        <div class="mode-selector">
+            <button id="singleMode" class="active">单次调用</button>
+            <button id="streamMode">流式输出</button>
+            <button id="batchMode">批量处理</button>
+        </div>
+
+        <div class="batch-input" id="batchInput">
+            <div class="batch-item">
+                <input type="text" placeholder="主题 1" value="TypeScript">
+                <button onclick="removeBatchItem(this)">删除</button>
+            </div>
+            <div class="batch-item">
+                <input type="text" placeholder="主题 2" value="JavaScript">
+                <button onclick="removeBatchItem(this)">删除</button>
+            </div>
+            <div class="batch-item">
+                <input type="text" placeholder="主题 3" value="Node.js">
+                <button onclick="removeBatchItem(this)">删除</button>
+            </div>
+            <button onclick="addBatchItem()" style="margin-top: 10px;">添加主题</button>
+        </div>
+
+        <button id="submitBtn" onclick="submitRequest()">🚀 运行 LCEL 链</button>
+
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script type="module">
+        // 使用 ES6 模块加载 LangChain.js
+        let currentMode = 'single';
+        let chain = null;
+
+        // 动态加载模块
+        async function loadLangChain() {
+            try {
+                // 尝试加载最新版本
+                const { ChatOpenAI } = await import('https://esm.sh/@langchain/openai@0.3.17');
+                const { PromptTemplate } = await import('https://esm.sh/@langchain/core@0.3.66/prompts');
+                const { StringOutputParser } = await import('https://esm.sh/@langchain/core@0.3.66/output_parsers');
+                const { RunnableSequence } = await import('https://esm.sh/@langchain/core@0.3.66/runnables');
+
+                // 设置全局对象
+                window.ChatOpenAI = ChatOpenAI;
+                window.PromptTemplate = PromptTemplate;
+                window.StringOutputParser = StringOutputParser;
+                window.RunnableSequence = RunnableSequence;
+
+                console.log('✅ LangChain.js 模块加载成功 (v0.3.17)');
+                return true;
+            } catch (error) {
+                console.warn('⚠️ 最新版本加载失败，尝试备用版本:', error);
+                
+                try {
+                    // 备用版本
+                    const { ChatOpenAI } = await import('https://esm.sh/@langchain/openai@0.0.14');
+                    const { PromptTemplate } = await import('https://esm.sh/@langchain/core@0.1.17/prompts');
+                    const { StringOutputParser } = await import('https://esm.sh/@langchain/core@0.1.17/output_parsers');
+                    const { RunnableSequence } = await import('https://esm.sh/@langchain/core@0.1.17/runnables');
+
+                    window.ChatOpenAI = ChatOpenAI;
+                    window.PromptTemplate = PromptTemplate;
+                    window.StringOutputParser = StringOutputParser;
+                    window.RunnableSequence = RunnableSequence;
+
+                    console.log('✅ LangChain.js 模块加载成功 (备用版本 v0.0.14)');
+                    return true;
+                } catch (backupError) {
+                    console.error('❌ 所有版本都加载失败:', backupError);
+                    
+                    // 如果都失败了，使用模拟版本
+                    console.log('🔄 使用模拟版本');
+                    setupMockVersion();
+                    return false;
+                }
+            }
+        }
+
+        // 模拟版本作为后备
+        function setupMockVersion() {
+            class MockPromptTemplate {
+                constructor(template) {
+                    this.template = template;
+                }
+                
+                static fromTemplate(template) {
+                    return new MockPromptTemplate(template);
+                }
+                
+                format(variables) {
+                    let result = this.template;
+                    for (const [key, value] of Object.entries(variables)) {
+                        result = result.replace(`{${key}}`, value);
+                    }
+                    return result;
+                }
+            }
+
+            class MockChatOpenAI {
+                constructor(config) {
+                    this.config = config;
+                }
+                
+                async invoke(input) {
+                    const prompt = input;
+                    const response = await this.callAPI(prompt);
+                    return { content: response };
+                }
+                
+                async stream(input) {
+                    const prompt = input;
+                    const response = await this.callAPI(prompt);
+                    return response.split('').map(char => char);
+                }
+                
+                async batch(inputs) {
+                    const results = [];
+                    for (const input of inputs) {
+                        const result = await this.invoke(input);
+                        results.push(result);
+                    }
+                    return results;
+                }
+                
+                async callAPI(prompt) {
+                    const apiKey = this.config.configuration.apiKey;
+                    const baseURL = this.config.configuration.baseURL;
+                    
+                    try {
+                        const response = await fetch(`${baseURL}/chat/completions`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${apiKey}`,
+                            },
+                            body: JSON.stringify({
+                                model: this.config.model,
+                                messages: [{ role: 'user', content: prompt }],
+                                temperature: this.config.temperature,
+                            }),
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`API 调用失败: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        return data.choices[0].message.content;
+                    } catch (error) {
+                        throw new Error(`API 调用错误: ${error.message}`);
+                    }
+                }
+            }
+
+            class MockStringOutputParser {
+                parseResult(result) {
+                    return result;
+                }
+            }
+
+            class MockRunnableSequence {
+                constructor(components) {
+                    this.components = components;
+                }
+                
+                static from(components) {
+                    return new MockRunnableSequence(components);
+                }
+                
+                async invoke(input) {
+                    let currentInput = input;
+                    for (const component of this.components) {
+                        if (component instanceof MockPromptTemplate) {
+                            currentInput = component.format(currentInput);
+                        } else if (component instanceof MockChatOpenAI) {
+                            const result = await component.invoke(currentInput);
+                            currentInput = result.content;
+                        } else if (component instanceof MockStringOutputParser) {
+                            currentInput = component.parseResult(currentInput);
+                        }
+                    }
+                    return currentInput;
+                }
+                
+                async stream(input) {
+                    let currentInput = input;
+                    for (const component of this.components) {
+                        if (component instanceof MockPromptTemplate) {
+                            currentInput = component.format(currentInput);
+                        } else if (component instanceof MockChatOpenAI) {
+                            return await component.stream(currentInput);
+                        }
+                    }
+                }
+                
+                async batch(inputs) {
+                    const results = [];
+                    for (const input of inputs) {
+                        const result = await this.invoke(input);
+                        results.push(result);
+                    }
+                    return results;
+                }
+            }
+
+            window.ChatOpenAI = MockChatOpenAI;
+            window.PromptTemplate = MockPromptTemplate;
+            window.StringOutputParser = MockStringOutputParser;
+            window.RunnableSequence = MockRunnableSequence;
+        }
+
+        // 立即加载模块
+        loadLangChain().then(success => {
+            if (success) {
+                console.log('🎉 LangChain.js 模块加载完成，可以使用完整功能');
+            } else {
+                console.log('⚠️ 使用模拟版本，功能可能受限');
+            }
+        });
+    </script>
+
+    <script>
+
+        // 模式切换
+        document.getElementById('singleMode').addEventListener('click', () => setMode('single'));
+        document.getElementById('streamMode').addEventListener('click', () => setMode('stream'));
+        document.getElementById('batchMode').addEventListener('click', () => setMode('batch'));
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-selector button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(mode + 'Mode').classList.add('active');
+            
+            document.getElementById('batchInput').classList.toggle('show', mode === 'batch');
+        }
+
+        function addBatchItem() {
+            const container = document.getElementById('batchInput');
+            const newItem = document.createElement('div');
+            newItem.className = 'batch-item';
+            newItem.innerHTML = `
+                <input type="text" placeholder="新主题">
+                <button onclick="removeBatchItem(this)">删除</button>
+            `;
+            container.insertBefore(newItem, container.lastElementChild);
+        }
+
+        function removeBatchItem(button) {
+            const items = document.querySelectorAll('.batch-item');
+            if (items.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+
+        async function submitRequest() {
+            const apiKey = document.getElementById('apiKey').value;
+            const topic = document.getElementById('topic').value;
+            const resultDiv = document.getElementById('result');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (!apiKey) {
+                showResult('❌ 请输入 API Key', 'error');
+                return;
+            }
+
+            if (!topic && currentMode !== 'batch') {
+                showResult('❌ 请输入主题', 'error');
+                return;
+            }
+
+            // 检查模块是否已加载
+            if (!window.PromptTemplate || !window.ChatOpenAI || !window.StringOutputParser || !window.RunnableSequence) {
+                showResult('❌ LangChain.js 模块尚未加载完成，请稍后再试', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ 处理中...';
+            showResult('⏳ 正在初始化 LCEL 链...', 'loading');
+
+            try {
+                // 创建 LCEL 链
+                const prompt = window.PromptTemplate.fromTemplate("请用一句话介绍 {topic} 的核心特点。");
+                const llm = new window.ChatOpenAI({
+                    model: "openai/gpt-3.5-turbo",
+                    temperature: 0.7,
+                    configuration: {
+                        baseURL: "https://openrouter.ai/api/v1",
+                        apiKey: apiKey,
+                    },
+                });
+                const parser = new window.StringOutputParser();
+                chain = window.RunnableSequence.from([prompt, llm, parser]);
+
+                let result = '';
+
+                switch (currentMode) {
+                    case 'single':
+                        result = await chain.invoke({ topic });
+                        showResult(`✅ 单次调用结果:\n\n${result}`);
+                        break;
+
+                    case 'stream':
+                        result = '✅ 流式输出结果:\n\n';
+                        showResult(result, 'loading');
+                        
+                        for await (const chunk of await chain.stream({ topic })) {
+                            result += chunk;
+                            showResult(result, 'loading');
+                        }
+                        showResult(result);
+                        break;
+
+                    case 'batch':
+                        const topics = Array.from(document.querySelectorAll('#batchInput input'))
+                            .map(input => input.value)
+                            .filter(value => value.trim());
+                        
+                        if (topics.length === 0) {
+                            showResult('❌ 请至少输入一个主题', 'error');
+                            return;
+                        }
+
+                        const batchInputs = topics.map(topic => ({ topic }));
+                        const batchResults = await chain.batch(batchInputs);
+                        
+                        result = '✅ 批量处理结果:\n\n';
+                        batchResults.forEach((batchResult, index) => {
+                            // 处理不同的返回格式
+                            const content = typeof batchResult === 'string' 
+                                ? batchResult 
+                                : batchResult.content || batchResult.toString();
+                            result += `${index + 1}. ${topics[index]}: ${content}\n`;
+                        });
+                        showResult(result);
+                        break;
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showResult(`❌ 错误: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 运行 LCEL 链';
+            }
+        }
+
+        function showResult(message, type = '') {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = message;
+        }
+    </script>
+</body>
+</html> 

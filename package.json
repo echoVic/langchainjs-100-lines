@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "tsx examples/01-hello/index.ts",
     "dev:01": "tsx examples/01-hello/index.ts",
-    "browser:01": "node scripts/serve-browser.js",
+    "dev:02": "tsx examples/02-lcel/index.ts",
+    "browser:01": "open examples/01-hello/browser-demo.html",
+    "browser:02": "open examples/02-lcel/browser-demo.html",
+    "server": "node scripts/serve-browser.js",
+    "test:01": "jest examples/01-hello/index.test.ts",
+    "test:02": "jest examples/02-lcel/index.test.ts",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "type-check": "tsc --noEmit",
     "test": "jest --passWithNoTests",

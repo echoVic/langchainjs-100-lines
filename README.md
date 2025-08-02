@@ -35,7 +35,7 @@
 |---|---|---|
 | **GitHub Pages** | [🚀 在线Demo](https://echovic.github.io/langchainjs-100-lines/) | 一键部署，直接访问 |
 | **CodeSandbox** | [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://codesandbox.io/p/github/echoVic/langchainjs-100-lines/main?import=true) | 一键在线运行 |
-| **浏览器演示** | [Live Demo](examples/01-hello/browser-demo.html) | 本地浏览器直接运行 |
+| **浏览器演示** | [Demo 01](examples/01-hello/browser-demo.html) / [Demo 02](examples/02-lcel/browser-demo.html) | 本地浏览器直接运行 |
 
 > 💡 **推荐使用 GitHub Pages 版本**，无需任何配置，打开即用！
 
@@ -75,7 +75,8 @@ pnpm run dev:02  # 运行第2个示例
 # ...以此类推
 
 # 启动浏览器演示
-pnpm run browser:01
+pnpm run browser:01  # Demo 01 - Hello LLM
+pnpm run browser:02  # Demo 02 - LCEL 管道
 # 自动选择可用端口，访问显示的URL
 ```
 
@@ -93,6 +94,7 @@ pnpm run browser:01
 | 编号 | 示例 | 核心概念 | 运行命令 |
 |------|------|----------|----------|
 | [01](examples/01-hello) | 你好，LangChain.js！ | ChatOpenAI 基础用法 | `pnpm run dev:01` |
+| [02](examples/02-lcel) | LCEL 管道式编程 | RunnableSequence 链式调用 | `pnpm run dev:02` |
 
 ## 🔧 开发环境
 
@@ -125,7 +127,7 @@ langchainjs-100-lines/
 ├── .github/workflows/    # CI/CD 配置
 ├── examples/             # 10个独立示例
 │   ├── 01-hello/        # 基础示例
-│   ├── 02-lcel-pipe/    # 链式调用
+│   ├── 02-lcel/         # LCEL 管道示例
 │   ├── ...              # 其他示例
 │   └── 10-langsmith/    # 监控追踪
 └── src/utils/            # 共用工具函数

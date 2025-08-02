@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { createServer } from 'http';
 import { readFile } from 'fs/promises';
+import { createServer } from 'http';
 import { extname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -82,7 +82,11 @@ async function startServer() {
       console.log(`\n📁 Serving files from: ${join(__dirname, '..')}`);
       console.log(`\n🎯 Quick access:`);
       console.log(`   Homepage: http://localhost:${port}`);
-      console.log(`   Browser Demo: http://localhost:${port}/examples/01-hello/browser-demo.html`);
+      console.log(`   Demo 01 (Hello): http://localhost:${port}/examples/01-hello/browser-demo.html`);
+      console.log(`   Demo 02 (LCEL): http://localhost:${port}/examples/02-lcel/browser-demo.html`);
+      console.log(`\n📚 Available demos:`);
+      console.log(`   • 01-hello: 基础 LLM 调用演示`);
+      console.log(`   • 02-lcel: LCEL 管道式编程演示`);
     });
 
     // 优雅关闭
